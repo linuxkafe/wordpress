@@ -293,3 +293,15 @@ function linuxkafe_featured_image_as_background() {
     }
 }
 add_action( 'wp_head', 'linuxkafe_featured_image_as_background' );
+function enqueue_custom_autoscroll() {
+	if ( is_single() || is_page() ) {
+		wp_enqueue_script(
+				'custom-autoscroll', // Handle único
+				get_stylesheet_directory_uri() . '/js/autoscroll.js', // Caminho
+				array(), // Dependências (vazio pois é Vanilla JS)
+				filemtime( get_stylesheet_directory() . '/js/autoscroll.js' ), // Versão dinâmica para cache
+				true // true = carregar no footer (melhor performance de load)
+				);
+	}
+}
+add_action('wp_footer', 'enqueue_custom_autoscroll');

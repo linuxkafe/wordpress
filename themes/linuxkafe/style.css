@@ -320,3 +320,64 @@ pre { padding: 1rem; overflow-x: auto; }
 .linuxkafe-modern-theme .entry-title {
     display: none !important;
 }
+/* 1. Força o alinhamento à esquerda do Menu Wrapper e torna-o STICKY */
+.menu-wrapper {
+    text-align: left !important;
+    width: 100%;
+    margin: 0 !important;
+    
+    /* Configuração Sticky */
+    position: -webkit-sticky !important; /* Safari */
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 1000 !important;
+    
+    /* Estética para quando faz scroll (fundo semi-transparente) */
+    background-color: #1a1a1a !important; 
+    backdrop-filter: blur(5px); /* Efeito vidro */
+    border-bottom: 2px solid #F8B400; /* Uma linha fina amarela no fundo para separar */
+    /* Ajuste de padding para respirar */
+    padding: 10px 20px !important; 
+    /* Margem negativa lateral para compensar o padding do container pai (.linuxkafe-modern-theme) se necessário, 
+       mas experimenta assim primeiro. */
+}
+
+/* Cor do texto dos links para BRANCO */
+.menu-wrapper a,
+.main-navigation a,
+#primary-menu a {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+/* Hover continua amarelo */
+.menu-wrapper a:hover,
+.main-navigation a:hover,
+#primary-menu a:hover {
+    color: #F8B400 !important;
+    background-color: rgba(255, 255, 255, 0.05) !important; /* Leve destaque no fundo ao passar o rato */
+}
+/* Ajuste para Mobile (onde o padding do tema é 15px) */
+@media (max-width: 768px) {
+    .menu-wrapper {
+        margin-left: -15px !important;
+        margin-right: -15px !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+        width: calc(100% + 30px) !important;
+    }
+}
+/* Garante que o botão de mobile não aparece no desktop */
+button.menu-toggle {
+    display: none !important;
+}
+
+/* Reativa o botão APENAS em ecrãs pequenos (Mobile) */
+@media (max-width: 768px) {
+    button.menu-toggle {
+        display: block !important;
+        background: #212121 !important; /* Fundo escuro também no botão */
+        color: #fff !important;
+        border: none !important;
+    }
+}

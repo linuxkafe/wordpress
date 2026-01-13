@@ -5,7 +5,20 @@
  */
 get_header();
 ?>
-
+<div class="menu-wrapper">
+    <?php 
+    // Tenta usar a tua função personalizada, se não der, usa o padrão do WP
+    if ( function_exists( 'linuxkafe_menu_html' ) ) {
+        linuxkafe_menu_html(); 
+    } else {
+        wp_nav_menu( array(
+            'theme_location' => 'menu-1',
+            'menu_id'        => 'primary-menu',
+            'container_class'=> 'main-navigation', // Ajuda a manter o estilo
+        ) );
+    }
+    ?>
+</div>
 <main id="primary" class="site-main">
     <div class="linuxkafe-modern-theme">
 

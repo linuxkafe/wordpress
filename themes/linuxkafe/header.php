@@ -35,21 +35,3 @@
         <?php esc_html_e( 'Skip to content', 'linuxkafe' ); ?>
     </a>
 
-    <header id="masthead" class="site-header">
-        <div class="header-container">
-            <nav id="site-navigation" class="main-navigation">
-                <input class="menu-btn" type="checkbox" id="menu-btn" />
-                <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
-                <?php
-                wp_nav_menu(
-                    array(
-                        'theme_location' => 'menu-1',
-                        'menu_id'        => 'primary-menu',
-                        'container'      => false,
-                        'menu_class'     => 'menu',
-                    )
-                );
-                ?>
-            </nav>
-        </div>
-    </header>
