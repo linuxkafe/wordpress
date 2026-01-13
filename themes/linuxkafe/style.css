@@ -1,513 +1,309 @@
 /*
 Theme Name: linuxkafe
-Description: Estilos personalizados para o tema Linuxkafe.
-Version: 1.0.7
+Description: Tema moderno, limpo e responsivo.
+Version: 2.1.0
+Author: LinuxKafé
 */
 
-/* ========================================================= */
-/* 0. CONFIGURAÇÃO BASE E REMOÇÃO DE ESPAÇAMENTO DESNECESSÁRIO */
-/* ========================================================= */
+/* ==========================================================================
+   1. VARIÁVEIS & CONFIGURAÇÃO
+   ========================================================================== */
+:root {
+    /* Cores */
+    --color-primary: #F8B400;      /* Amarelo LinuxKafé */
+    --color-text: #212121;
+    --color-text-light: #555555;
+    --color-bg: #FFFFFF;
+    --color-bg-card: #FFFFFF;
+    --color-header: #2d2d2d;       /* Fundo do Header */
+    --color-border: #E0E0E0;
+    --color-link: #0056b3;
+    
+    /* Tipografia */
+    --font-base: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-heading: 'Poppins', var(--font-base);
+    --font-mono: 'Fira Code', monospace;
 
-/* * Tenta remover o padding/margin de TODOS os contentores principais */
-.site-main,
-.content-area,
-#main,
-#content,
-#main-content,
-.main-content,
-.page-header,
-.entry-header {
-    padding-top: 0 !important;
-    margin-top: 0 !important;
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-    max-width: none !important;
+    /* Layout */
+    --width-max: 1100px;
+    --border-radius: 8px;
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
-/* 5. CORREÇÃO ESPECÍFICA: Anular a classe .row.pt-1.pb-1 */
-.row.pt-1.pb-1 {
-    padding: 0 !important;
-    margin: 0 !important;
+/* ==========================================================================
+   2. UTILITÁRIOS GLOBAIS (O Fix da Checkbox está aqui)
+   ========================================================================== */
+/* Esconde a checkbox de controlo do menu EM TODO O LADO */
+#menu-btn, .menu-btn {
+    display: none !important;
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    z-index: -999;
 }
 
-/* ========================================================= */
-/* 1. FONTES, CORES BASE E BLOCO DE CONTEÚDO MODERN (LAYOUT FLUIDO POR DEFEITO) */
-/* ========================================================= */
-
-/* Garante que as fontes Inter/Poppins são carregadas */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@400;600;700&display=swap');
-
-/* Fundo BRANCO PURO e Estilo de fonte base */
-body, .site-content, .content-area, #content, #main-content {
-    background-color: #FFFFFF !important;
-    border: none !important;
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Inter', 'Poppins', system-ui, sans-serif !important;
-    line-height: 1.7 !important;
-    /* Tamanho base do texto para desktop e mobile */
-    font-size: 18px !important; 
-    color: #212121 !important;
+    margin: 0;
+    font-family: var(--font-base);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    background-color: var(--color-bg);
 }
 
-/* BLOCO DE CONTEÚDO MODERN - ESTE É O ESTILO BASE (FLUIDO E COM PADDING) */
-.linuxkafe-modern-theme {
-    background-color: #F8F8F8 !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-    border-radius: 12px !important;
-    padding: 35px !important; /* Padding de desktop, ajustado em mobile */
-    color: #212121 !important;
-    
-    /* POR DEFEITO, OCUPA A LARGURA MÁXIMA (FULL WIDTH) */
-    max-width: 100% !important; 
-    
-    margin-left: auto !important;
-    margin-right: auto !important;
-    margin-top: 30px !important; 
-
-    text-align: left !important;
-}
-
-
-/* ========================================================= */
-/* 2. ESTILO DOS TÍTULOS E LINKS (Laranja: #F8B400) */
-/* ========================================================= */
-
-h1, h2, h3, h4, h5, h6 {
-    color: #F8B400 !important;
-    font-weight: 700 !important;
-    margin-top: 1.5em !important;
-    margin-bottom: 0.6em !important;
-    line-height: 1.2 !important;
-    font-family: 'Poppins', sans-serif !important;
-}
-
-/* Links */
-.linuxkafe-modern-theme a {
-    color: #007bff !important;
-    text-decoration: none !important;
-    font-weight: 500;
-}
-.linuxkafe-modern-theme a:hover {
-    color: #F8B400 !important;
-    text-decoration: underline !important;
-}
-
-/* ========================================================= */
-/* 3. LOGOTIPO E EFEITO FADE-IN (ALINHADO À ESQUERDA) */
-/* ========================================================= */
-
-/* Esconde o Nome do Site (Título) */
-.site-branding .site-title,
-.site-branding .site-title a {
-    display: none !important;
-}
-
-/* Define a animação de Fade In */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Alinha o contêiner do logotipo à esquerda e aplica Fade-In */
-.site-branding {
-    text-align: left !important; 
-    display: block !important;
-    width: 100% !important;
-    margin-bottom: 10px !important;
-    
-    opacity: 0; 
-    animation: fadeIn 1.5s ease-out 0.5s forwards !important; 
-}
-
-/* Força o alinhamento à esquerda do LINK/IMAGEM do logotipo */
-.site-branding a.custom-logo-link {
-    display: inline-block !important; 
-    margin: 0 !important; 
-}
-.site-branding img.custom-logo {
-    display: inline-block !important; 
-    margin: 0 !important; 
-    
-    /* [CORRIGIDO] Permite o tamanho original do logotipo no desktop, mas o torna responsivo */
-    max-width: 100% !important; 
-    height: auto !important; /* Garante que a altura é respeitada pela proporção */
-    width: auto !important; 
-}
-
-
-/* ========================================================= */
-/* 4. MENU DE NAVEGAÇÃO (ESTILO: ULTRA MINIMALISTA - FLUIDO) */
-/* ========================================================= */
-
-/* 1. Área do Cabeçalho: Fundo transparente e sem sombra */
-.header-area,
-.site-header,
-#masthead {
-    background-color: transparent !important; 
-    box-shadow: none !important; 
-    padding-top: 10px !important; 
-    padding-bottom: 10px !important;
-    position: relative;
-    margin-bottom: 0 !important; 
-    
-    /* Limita a largura e centraliza o cabeçalho no corpo da página (FLUIDO) */
-    max-width: 100% !important; 
-    margin-left: auto !important;
-    margin-right: auto !important;
-    
-    text-align: left !important;
-    display: block !important;
-}
-
-/* --- CORREÇÃO DE ALINHAMENTO DO MENU PARA A ESQUERDA (FORÇADA) --- */
-
-/* 1. Força o alinhamento à esquerda do Menu Wrapper */
-.menu-wrapper {
-    text-align: left !important;
-    width: 100%;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* 2. Regras Agressivas para o elemento de navegação real (<nav> e <ul>) */
-.main-navigation,
-.main-navigation ul {
-    justify-content: flex-start !important;
-    margin-left: 0 !important;
-    margin-right: auto !important;
-    text-align: left !important;
-    display: flex !important; /* Mantém a navegação em linha (desktop/maioria) */
-}
-
-/* 3. Lista de Navegação Principal (Horizontal) */
-#primary-menu,
-.main-navigation ul.menu {
-    list-style: none !important;
-    padding: 0 !important;
-}
-
-/* 4. Itens de Menu (Li): Reduz padding lateral */
-#primary-menu > li,
-.main-navigation ul.menu > li {
-    position: relative !important;
-    padding: 0 5px; 
-}
-
-/* 5. Links de Menu (A) - ESTILO ULTRA MINIMALISTA */
-#primary-menu a,
-.main-navigation a {
-    color: #444444 !important; 
-    text-decoration: none !important;
-    font-family: 'Inter', sans-serif !important; 
-    font-weight: 500 !important; 
-    font-size: 15px !important; 
-    padding: 8px 15px !important; 
-    display: block !important;
-    transition: color 0.2s ease;
-    
-    border-bottom: none !important; 
-}
-
-/* Efeito Hover nos Links Principais: Apenas muda a cor do texto */
-#primary-menu a:hover,
-#primary-menu > li.current-menu-item > a,
-.main-navigation a:hover {
-    color: #F8B400 !important; 
-    background-color: transparent !important; 
-    border-bottom: none !important; 
-}
-
-/* --- ESTILO DO SUB-MENU (DROPDOWN MINIMALISTA) --- */
-
-/* Esconde o Sub-Menu por defeito e posiciona-o */
-#primary-menu ul.sub-menu,
-.main-navigation ul.sub-menu {
-    display: none !important;
-    position: absolute !important;
-    top: 100% !important;
-    left: 0 !important;
-    min-width: 200px !important; 
-    background-color: #FFFFFF !important;
-    border: none;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15); 
-    z-index: 999;
-    padding: 0 !important; 
-    border-radius: 4px; 
-}
-
-/* Mostrar o Sub-Menu ao passar o rato no item pai */
-#primary-menu li:hover > ul.sub-menu,
-.main-navigation li:hover > ul.sub-menu {
-    display: block !important;
-}
-
-/* Links dentro do sub-menu */
-#primary-menu ul.sub-menu li a,
-.main-navigation ul.sub-menu li a {
-    padding: 10px 18px !important; 
-    border-bottom: 1px solid #f0f0f0 !important; 
-    font-weight: 400 !important;
-    font-size: 15px !important;
-    color: #444444 !important;
-}
-
-/* Remove a linha divisória do último item */
-#primary-menu ul.sub-menu li:last-child a,
-.main-navigation ul.sub-menu li:last-child a {
-    border-bottom: none !important;
-}
-
-/* Efeito Hover nos Links do Sub-Menu */
-#primary-menu ul.sub-menu li a:hover,
-.main-navigation ul.sub-menu li a:hover {
-    background-color: #f7f7f7 !important; 
-    color: #F8B400 !important; 
-}
-
-/* Otimização de contêineres de menu */
-.menu-header-menu-container,
-.menu-toggle {
-    display: block !important;
-    width: 100% !important;
-}
-.menu-toggle {
-    display: none !important; /* Ocultar botão "Primary Menu" em desktop */
-}
-
-
-/* ========================================================= */
-/* 5. LISTAS DE CONTEÚDO E CTA */
-/* ========================================================= */
-
-/* Lista de serviços/avença */
-.linuxkafe-modern-theme ul {
-    padding-left: 20px !important;
-}
-.linuxkafe-modern-theme ul li {
-    border-left: 5px solid #F8B400 !important;
-    background: #EFEFEF !important;
-    color: #333333 !important;
-    padding: 15px !important;
-    margin-bottom: 10px !important;
-    border-radius: 6px !important;
-    list-style: none !important;
-}
-
-/* CTA (botão de contacto) */
-.contato-final a {
-    color: #1e1e1e !important;
-    background-color: #FFFF00 !important;
-    box-shadow: 0 6px 15px rgba(255, 255, 0, 0.5) !important;
-    padding: 12px 25px !important;
-    display: inline-block !important;
-    border-radius: 50px !important;
-    font-weight: 700 !important;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.contato-final a:hover {
-    background-color: #FFEA00 !important;
-    text-decoration: none !important;
-    transform: translateY(-2px);
-    transition: all 0.2s;
-}
-
-/* ========================================================= */
-/* 6. OCULTAR FOOTER (RODAPÉ) */
-/* ========================================================= */
-
-.site-footer,
-#site-footer,
-footer,
-.footer-widgets,
-.elementor-footer,
-#colophon,
-#footer {
-    display: none !important;
-}
-
-/* ========================================================= */
-/* 7. MEDIA QUERY PARA DESKTOP (Min. 769px) - REGRAS DE LARGURA FIXA */
-/* ========================================================= */
-
-@media (min-width: 769px) {
-    /* APLICA A LARGURA DE 1100PX APENAS EM ECRÃS GRANDES */
-    .linuxkafe-modern-theme {
-        max-width: 1100px !important; 
-        padding: 35px !important;
-    }
-    
-    /* Limita o header à mesma largura */
-    .header-area,
-    .site-header,
-    #masthead {
-        max-width: 1100px !important; 
-    }
-}
-
-/* ========================================================= */
-/* 8. MEDIA QUERY PARA MÓVEL (Máx. 768px) - OTIMIZAÇÃO DE MENU MOBILE E FONT SIZE GARANTIDA */
-/* ========================================================= */
-
-@media (max-width: 768px) {
-    
-    /* [MANUTENÇÃO] Reduz a altura máxima do logotipo em mobile */
-    .site-branding img.custom-logo {
-        max-height: 40px !important; 
-    }
-    
-    /* [GARANTIA DE FONT SIZE] Aplica 16px a *TODOS* os elementos para anular plugins/estilos inline */
-    .linuxkafe-modern-theme *, 
-    body, 
-    p, 
-    span, 
-    li, 
-    div {
-        font-size: 16px !important; 
-        line-height: 1.6 !important;
-    }
-    
-    /* 1. Ajustar o Bloco de Conteúdo Principal para Móvel */
-    .linuxkafe-modern-theme {
-        max-width: 100% !important; 
-        padding: 15px !important; /* Reduz o padding lateral */
-        margin-top: 15px !important; 
-        margin-bottom: 15px !important;
-        background-color: #F8F8F8 !important; 
-    }
-
-    /* Remover o alinhamento horizontal do menu para dar prioridade ao toggle */
-    .main-navigation,
-    .main-navigation ul {
-        display: block !important; 
-        justify-content: initial !important; 
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-    }
-
-    /* 2. Menu Toggle: Botão para abrir/fechar o menu */
-    
-    .menu-toggle {
-        display: block !important; 
-        text-align: left !important; 
-        margin-bottom: 10px !important;
-        border: 1px solid #F8B400 !important;
-        background-color: #FFF !important;
-        padding: 8px 15px !important;
-        border-radius: 4px !important;
-        font-size: 14px !important;
-        width: 100% !important; 
-        cursor: pointer;
-    }
-    
-    /* 3. Comportamento do Menu Oculto e Aberto (Otimizado) */
-    
-    .main-navigation ul.menu {
-        display: none !important; /* Oculto por defeito */
-        flex-direction: column !important; 
-        width: 100% !important;
-    }
-    
-    /* MOSTRA O MENU QUANDO ESTÁ ATIVO */
-    .main-navigation.toggled ul.menu,
-    .main-navigation ul.menu[aria-expanded="true"] {
-        display: flex !important; 
-        padding: 0 !important;
-    }
-    
-    /* 4. Itens do Menu (Empilhamento Vertical) */
-    
-    .main-navigation ul.menu li {
-        width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border-bottom: 1px solid #f0f0f0 !important; 
-    }
-    
-    /* Links de Menu: Garante que os links clicáveis ocupam toda a largura */
-    .main-navigation a {
-        padding: 12px 15px !important; 
-        width: 100% !important;
-    }
-
-    /* 5. Sub-menus (Dropdown) */
-    
-    .main-navigation ul.sub-menu {
-        position: relative !important; 
-        top: auto !important;
-        left: auto !important;
-        box-shadow: none !important; 
-        border-left: 3px solid #F8B400 !important; 
-        margin-left: 15px !important;
-        width: calc(100% - 15px) !important;
-        background-color: #FFFFFF !important;
-    }
-    
-    .main-navigation ul.sub-menu li {
-        border-bottom: none !important;
-    }
-    
-    .main-navigation ul.sub-menu li a {
-        padding: 8px 10px !important;
-        border-bottom: 1px solid #f9f9f9 !important;
-    }
-
-    /* 6. Títulos */
-    h1 { font-size: 1.8em !important; }
-    h2 { font-size: 1.5em !important; }
-}
-
-/* ========================================================= */
-/* 9. OTIMIZAÇÕES DE VÍDEO E ACESSIBILIDADE (INCLUSÃO NÃO DESTRUTIVA) */
-/* ========================================================= */
-
-/* 9.1. VÍDEO RESPONSIVO (Essencial para Mobile) */
-/* Este CSS aplica-se a qualquer <div> que envolva um <video> ou <iframe> (YouTube, Vimeo) 
-   e garante que ele se ajusta ao ecrã com proporção 16:9.
-   Para usar, envolva o seu vídeo com <div class="video-container">...</div>
-*/
-
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%; /* Proporção 16:9: altura é 56.25% da largura */
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-    margin-bottom: 20px;
-    background: #000; /* Fundo preto enquanto carrega */
-}
-
-/* Garante que o player ou vídeo ocupa o espaço exato do contentor */
-.video-container iframe,
-.video-container video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 0; 
-}
-
-/* 9.2. ACESSIBILIDADE: Melhoria de Imagens (Prevenir CLS) */
-/* Garante que as imagens se ajustam perfeitamente ao contentor no mobile */
 img {
-    height: auto;
     max-width: 100%;
-    display: block; 
+    height: auto;
+    display: block;
 }
 
-/* 9.3. ACESSIBILIDADE: Visibilidade do Skip Link */
-/* Garante que o link "Skip to content" (já existente no header.php) é visível para quem navega por teclado */
-.skip-link:focus {
-    clip: auto !important; /* Overrides screen-reader-text hiding */
+/* ==========================================================================
+   3. HEADER & NAVEGAÇÃO (Slim & Dark)
+   ========================================================================== */
+.site-header {
+    background-color: var(--color-header);
+    padding: 0;
+    width: 100%;
+    position: relative;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: var(--width-max);
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: flex-end; /* Menu alinhado à direita */
+    align-items: center;
+    min-height: 50px;
+}
+
+/* Menu Desktop */
+.main-navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.main-navigation a {
+    color: #e0e0e0;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.8rem;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.main-navigation a:hover {
+    color: var(--color-primary);
+}
+
+/* Sub-menus Desktop */
+.main-navigation ul li {
+    position: relative;
+}
+
+.main-navigation ul ul.sub-menu {
+    display: none;
     position: absolute;
-    height: auto;
-    width: auto;
-    background-color: #F8B400; /* Cor de destaque da LinuxKafé */
-    color: #212121;
-    z-index: 99999;
-    padding: 10px;
-    text-decoration: underline;
+    top: 100%;
+    right: 0; /* Alinha pela direita para não sair do ecrã */
+    min-width: 200px;
+    background-color: var(--color-header);
+    border: 1px solid #444;
+    padding: 0;
+    flex-direction: column;
+    z-index: 9999;
+}
+
+.main-navigation ul li:hover > ul.sub-menu {
+    display: flex;
+}
+
+.main-navigation ul ul.sub-menu li {
+    border-bottom: 1px solid #444;
+}
+
+.main-navigation ul ul.sub-menu a {
+    padding: 0.8rem 1.2rem;
+    white-space: nowrap;
+    display: block;
+}
+
+/* ==========================================================================
+   4. LOGO (Dentro do Conteúdo)
+   ========================================================================== */
+.content-branding {
+    text-align: left;
+    margin-bottom: 2rem;
+}
+
+.content-branding img,
+.custom-logo {
+    margin: 0; /* Remove a centralização (margin: 0 auto) */ 
+    /* Remove fundos e bordas */
+    background: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    
+    /* TRUQUE PARA O QUADRADO BRANCO: 
+       Multiplica o branco pelo fundo cinza claro, tornando-o transparente. 
+       Preserva o amarelo e preto. */
+    mix-blend-mode: multiply; 
+}
+
+/* ==========================================================================
+   5. LAYOUT DE CONTEÚDO (Card)
+   ========================================================================== */
+.site-main {
+    padding: 2rem 1rem;
+    flex-grow: 1;
+}
+
+.linuxkafe-modern-theme {
+    max-width: var(--width-max);
+    margin: 0 auto;
+    background-color: transparent;
+    padding: 3rem;
+    border-radius: var(--border-radius);
+}
+
+/* Tipografia do Conteúdo */
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    margin-top: 1.5rem;
+}
+
+h1.site-title {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+a { color: var(--color-link); }
+
+/* Snippets de Código */
+pre, code {
+    font-family: var(--font-mono);
+    background: #2d2d2d;
+    color: #f8f8f2;
+    border-radius: 4px;
+}
+pre { padding: 1rem; overflow-x: auto; }
+
+/* ==========================================================================
+   6. FOOTER
+   ========================================================================== */
+.site-footer {
+    background-color: var(--color-bg-card);
+    border-top: 1px solid var(--color-border);
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-text-light);
+    margin-top: auto;
+}
+
+/* ==========================================================================
+   7. MOBILE & RESPONSIVIDADE (Unificado < 850px)
+   ========================================================================== */
+@media (max-width: 850px) {
+    
+    /* Ajuste Header Mobile */
+    .header-container {
+        justify-content: space-between; /* Espaço entre logo (se houvesse) e botão */
+        padding: 0.5rem 1rem;
+    }
+
+    /* Botão Hamburger (Visível só aqui) */
+    .menu-icon {
+        cursor: pointer;
+        display: block;
+        padding: 10px;
+        user-select: none;
+    }
+
+    .navicon {
+        background: #ffffff; /* Branco para bater com o fundo escuro */
+        display: block;
+        height: 2px;
+        width: 24px;
+        position: relative;
+    }
+
+    .navicon:before, .navicon:after {
+        background: #ffffff;
+        content: '';
+        display: block;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        transition: all .2s ease-out;
+    }
+
+    .navicon:before { top: 7px; }
+    .navicon:after { top: -7px; }
+
+    /* Menu Aberto */
+    .main-navigation .menu {
+        display: none; /* Escondido por defeito */
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: var(--color-header);
+        border-top: 1px solid #444;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    /* Gatilho para abrir */
+    .menu-btn:checked ~ .menu {
+        display: flex;
+    }
+
+    /* Animação do X */
+    .menu-btn:checked ~ .menu-icon .navicon { background: transparent; }
+    .menu-btn:checked ~ .menu-icon .navicon:before { transform: rotate(-45deg); top: 0; }
+    .menu-btn:checked ~ .menu-icon .navicon:after { transform: rotate(45deg); top: 0; }
+
+    /* Itens do Menu Mobile */
+    .main-navigation ul { gap: 0; }
+    .main-navigation ul li {
+        width: 100%;
+        border-bottom: 1px solid #444;
+    }
+    .main-navigation ul li a {
+        padding: 1rem 1.5rem;
+        display: block;
+    }
+
+    /* Submenus Mobile (Estáticos e Indentados) */
+    .main-navigation ul ul.sub-menu {
+        position: static;
+        display: block;
+        box-shadow: none;
+        border: none;
+        background-color: rgba(255,255,255,0.05); /* Ligeiramente mais claro */
+    }
+
+    .main-navigation ul ul.sub-menu a {
+        padding-left: 2.5rem !important; /* Indentação forçada */
+        font-size: 0.9rem;
+        color: #cccccc;
+    }
+
+    /* Ajuste Logo Mobile */
+    .content-branding img {
+        max-width: 200px;
+    }
+    
+    .linuxkafe-modern-theme {
+        padding: 1.5rem;
+    }
 }

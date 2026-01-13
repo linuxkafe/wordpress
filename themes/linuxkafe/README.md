@@ -1,5 +1,5 @@
 # LINUXKAFÉ Theme
-# based on _s
+> based on _s and generated code using service modules like Google Gemini 3
 
 Installation
 ---------------
