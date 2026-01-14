@@ -218,23 +218,29 @@ function linuxkafe_logo_html() {
 }
 
 /**
- * Gera o HTML da Navegação Principal.
+ * Gera o HTML da Navegação Principal (Versão Checkbox Hack).
  */
 function linuxkafe_menu_html() {
     ?>
     <nav id="site-navigation" class="main-navigation">
-        <button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Primary Menu', 'linuxkafe' ); ?></button>
+        <input class="menu-btn" type="checkbox" id="menu-btn" />
+        
+        <label class="menu-icon" for="menu-btn">
+            <span class="navicon"></span>
+        </label>
+        
         <?php
         wp_nav_menu(
             array(
                 'theme_location' => 'menu-1',
                 'menu_id'        => 'primary-menu',
+                'menu_class'     => 'menu', // O CSS espera a classe .menu na UL
+                'container'      => false,  // Removemos a div wrapper para o "sibling selector" (~) do CSS funcionar
             )
         );
         ?>
     </nav><?php
 }
-
 // Tenta remover os hooks comuns que os temas usam para inserir o cabeçalho/menu.
 // Isto deve forçar a remoção dos elementos indesejados do cabeçalho original.
 

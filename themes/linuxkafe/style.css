@@ -119,7 +119,7 @@ img {
     display: none;
     position: absolute;
     top: 100%;
-    right: 0; /* Alinha pela direita para não sair do ecrã */
+    right: 10; /* Alinha pela direita para não sair do ecrã */
     min-width: 200px;
     background-color: var(--color-header);
     border: 1px solid #444;
@@ -372,12 +372,3 @@ button.menu-toggle {
     display: none !important;
 }
 
-/* Reativa o botão APENAS em ecrãs pequenos (Mobile) */
-@media (max-width: 768px) {
-    button.menu-toggle {
-        display: block !important;
-        background: #212121 !important; /* Fundo escuro também no botão */
-        color: #fff !important;
-        border: none !important;
-    }
-}
