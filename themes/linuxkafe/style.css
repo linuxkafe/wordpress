@@ -192,7 +192,17 @@ h1.site-title {
     margin: 0;
 }
 
-a { color: var(--color-link); }
+/* Links gerais: texto normal por defeito, destaque ao passar o rato */
+a {
+    color: inherit !important;            /* Herda a cor do texto onde está */
+    text-decoration: none !important;     /* Sem sublinhado */
+    transition: color 0.2s ease-in-out;   /* Transição suave */
+}
+
+a:hover, a:focus {
+    color: var(--color-primary) !important; /* Fica Amarelo (#F8B400) no hover */
+    text-decoration: none !important;
+}
 
 /* Snippets de Código */
 pre, code {
