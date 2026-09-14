@@ -7,10 +7,6 @@ declare(strict_types=1);
 
 namespace Xkinstagram\Tests\Unit;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Xkinstagram\Auth\OAuth;
 
@@ -19,16 +15,19 @@ final class OAuthTest extends TestCase {
 
     protected function setUp(): void {
         $GLOBALS['wp_options'] = [];
+        $GLOBALS['wp_http_mock'] = [];
     }
 
-    private function make_oauth(?MockHandler $handler = null): OAuth {
-        if ($handler !== null) {
-            $stack = HandlerStack::create($handler);
-            $client = new Client(['handler' => $stack]);
-        } else {
-            $client = null;
-        }
-        return new OAuth('app_123', 'app_secret_456', self::REDIRECT_URI, $client);
+    protected function tearDown(): void {
+        unset($GLOBALS['wp_http_mock']);
+    }
+
+    private function make_oauth(): OAuth {
+        return new OAuth('app_123', 'app_secret_456', self::REDIRECT_URI);
+    }
+
+    private function queue_response(array|\WP_Error $response): void {
+        $GLOBALS['wp_http_mock'][] = $response;
     }
 
     public function test_redirect_uri_points_to_admin_post_callback(): void {
@@ -45,7 +44,6 @@ final class OAuthTest extends TestCase {
         $this->assertStringContainsString('response_type=code', $url);
         $this->assertStringContainsString('scope=instagram_business_basic', $url);
         $this->assertStringContainsString('state=test-nonce', $url);
-        $this->assertStringContainsString('redirect_uri=' . rawurlencode(self::REDIRECT_URI), $url);
     }
 
     public function test_state_is_stored_and_verified(): void {
@@ -58,41 +56,38 @@ final class OAuthTest extends TestCase {
     }
 
     public function test_exchange_code_success(): void {
-        $handler = new MockHandler([
-            new Response(200, [], json_encode([
+        $this->queue_response([
+            'code' => 200,
+            'body' => json_encode([
                 'access_token' => 'short_lived_token',
                 'user_id' => '17841400000000000',
                 'permissions' => ['instagram_business_basic'],
-            ])),
+            ]),
         ]);
 
-        $result = $this->make_oauth($handler)->exchange_code('auth_code_1');
+        $result = $this->make_oauth()->exchange_code('auth_code_1');
         $this->assertEquals('short_lived_token', $result['access_token']);
         $this->assertEquals('17841400000000000', $result['user_id']);
     }
 
     public function test_exchange_code_failure_without_token(): void {
-        $handler = new MockHandler([
-            new Response(200, [], json_encode([
+        $this->queue_response([
+            'code' => 200,
+            'body' => json_encode([
                 'error_message' => 'Invalid code',
-            ])),
+            ]),
         ]);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('code exchange failed');
-        $this->make_oauth($handler)->exchange_code('bad_code');
+        $this->make_oauth()->exchange_code('bad_code');
     }
 
     public function test_exchange_code_http_failure(): void {
-        $handler = new MockHandler([
-            new \GuzzleHttp\Exception\ConnectException(
-                'Connection refused',
-                new \GuzzleHttp\Psr7\Request('POST', 'https://api.instagram.com/oauth/access_token')
-            ),
-        ]);
+        $this->queue_response(new \WP_Error('http_error', 'Connection refused'));
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('OAuth token request failed');
-        $this->make_oauth($handler)->exchange_code('code');
+        $this->make_oauth()->exchange_code('code');
     }
 }

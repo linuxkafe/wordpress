@@ -24,7 +24,17 @@ define('XKINSTAGRAM_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('XKINSTAGRAM_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('XKINSTAGRAM_PLUGIN_FILE', __FILE__);
 
-require_once XKINSTAGRAM_PLUGIN_DIR . 'vendor/autoload.php';
+spl_autoload_register(static function (string $class): void {
+    $prefix = 'Xkinstagram\\';
+    if (strncmp($class, $prefix, strlen($prefix)) !== 0) {
+        return;
+    }
+    $relative = substr($class, strlen($prefix));
+    $file = XKINSTAGRAM_PLUGIN_DIR . 'src/' . str_replace('\\', '/', $relative) . '.php';
+    if (is_file($file)) {
+        require_once $file;
+    }
+});
 
 use Xkinstagram\Admin\Settings;
 use Xkinstagram\Api\InstagramApi;

@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Xkinstagram\Auth;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-
 final class OAuth {
     private const AUTH_URL = 'https://www.instagram.com/oauth/authorize';
     private const TOKEN_URL = 'https://api.instagram.com/oauth/access_token';
@@ -22,19 +19,11 @@ final class OAuth {
     private string $appId;
     private string $appSecret;
     private string $redirectUri;
-    private Client $client;
 
-    public function __construct(string $appId, string $appSecret, string $redirectUri, ?Client $client = null) {
+    public function __construct(string $appId, string $appSecret, string $redirectUri) {
         $this->appId = $appId;
         $this->appSecret = $appSecret;
         $this->redirectUri = $redirectUri;
-        $this->client = $client ?? new Client([
-            'timeout' => 30,
-            'headers' => [
-                'Accept' => 'application/json',
-                'User-Agent' => 'xkinstagram/0.3.0',
-            ],
-        ]);
     }
 
     public static function redirect_uri(): string {
@@ -62,21 +51,22 @@ final class OAuth {
     }
 
     public function exchange_code(string $code): array {
-        try {
-            $response = $this->client->request('POST', self::TOKEN_URL, [
-                'form_params' => [
-                    'client_id' => $this->appId,
-                    'client_secret' => $this->appSecret,
-                    'grant_type' => 'authorization_code',
-                    'redirect_uri' => $this->redirectUri,
-                    'code' => $code,
-                ],
-            ]);
+        $response = wp_remote_post(self::TOKEN_URL, [
+            'timeout' => 30,
+            'body' => [
+                'client_id' => $this->appId,
+                'client_secret' => $this->appSecret,
+                'grant_type' => 'authorization_code',
+                'redirect_uri' => $this->redirectUri,
+                'code' => $code,
+            ],
+        ]);
 
-            $data = json_decode($response->getBody()->getContents(), true);
-        } catch (GuzzleException $e) {
-            throw new \RuntimeException("OAuth token request failed: {$e->getMessage()}");
+        if (is_wp_error($response)) {
+            throw new \RuntimeException("OAuth token request failed: {$response->get_error_message()}");
         }
+
+        $data = json_decode(wp_remote_retrieve_body($response), true);
 
         if (!is_array($data) || empty($data['access_token'])) {
             $message = $data['error_message'] ?? 'No access token in response';

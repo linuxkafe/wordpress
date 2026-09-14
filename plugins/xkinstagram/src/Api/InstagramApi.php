@@ -7,15 +7,10 @@ declare(strict_types=1);
 
 namespace Xkinstagram\Api;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Exception\RequestException;
-
 class InstagramApi {
     private const API_VERSION = 'v25.0';
     private const BASE_URL = 'https://graph.instagram.com/';
 
-    private Client $client;
     private string $appId;
     private string $appSecret;
     private string $accessToken;
@@ -24,15 +19,6 @@ class InstagramApi {
         $this->appId = $appId;
         $this->appSecret = $appSecret;
         $this->accessToken = $accessToken;
-        
-        $this->client = new Client([
-            'base_uri' => self::BASE_URL,
-            'timeout' => 30,
-            'headers' => [
-                'Accept' => 'application/json',
-                'User-Agent' => 'xkinstagram/0.1.0',
-            ],
-        ]);
     }
 
     public function test_connection(): array {
@@ -81,16 +67,19 @@ class InstagramApi {
             'access_token' => $shortLivedToken,
         ];
 
-        try {
-            $response = $this->client->request('GET', 'access_token', [
-                'query' => $params,
-            ]);
-            
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (RequestException $e) {
-            $body = $e->getResponse()?->getBody()->getContents() ?? '';
-            throw new \RuntimeException("Token exchange failed: {$body}");
+        $url = self::BASE_URL . 'access_token?' . http_build_query($params);
+        $response = wp_remote_get($url, ['timeout' => 30]);
+
+        if (is_wp_error($response)) {
+            throw new \RuntimeException("Token exchange failed: {$response->get_error_message()}");
         }
+
+        $status = (int) wp_remote_retrieve_response_code($response);
+        if ($status >= 400) {
+            throw new \RuntimeException("Token exchange failed: " . wp_remote_retrieve_body($response));
+        }
+
+        return json_decode(wp_remote_retrieve_body($response), true);
     }
 
     public function refresh_token(string $longLivedToken): array {
@@ -99,40 +88,42 @@ class InstagramApi {
             'access_token' => $longLivedToken,
         ];
 
-        try {
-            $response = $this->client->request('GET', 'refresh_access_token', [
-                'query' => $params,
-            ]);
-            
-            return json_decode($response->getBody()->getContents(), true);
-        } catch (RequestException $e) {
-            $body = $e->getResponse()?->getBody()->getContents() ?? '';
-            throw new \RuntimeException("Token refresh failed: {$body}");
+        $url = self::BASE_URL . 'refresh_access_token?' . http_build_query($params);
+        $response = wp_remote_get($url, ['timeout' => 30]);
+
+        if (is_wp_error($response)) {
+            throw new \RuntimeException("Token refresh failed: {$response->get_error_message()}");
         }
+
+        $status = (int) wp_remote_retrieve_response_code($response);
+        if ($status >= 400) {
+            throw new \RuntimeException("Token refresh failed: " . wp_remote_retrieve_body($response));
+        }
+
+        return json_decode(wp_remote_retrieve_body($response), true);
     }
 
     private function request(string $method, string $endpoint, array $params = []): array {
-        $url = self::API_VERSION . '/' . ltrim($endpoint, '/');
-        
-        try {
-            $response = $this->client->request($method, $url, [
-                'query' => $params,
-            ]);
-            
-            $data = json_decode($response->getBody()->getContents(), true);
-            
-            if (isset($data['error'])) {
-                throw new \RuntimeException("API Error: {$data['error']['message']} (Code: {$data['error']['code']})");
-            }
-            
-            return $data;
-        } catch (RequestException $e) {
-            $body = $e->getResponse()?->getBody()->getContents() ?? '';
-            $error = json_decode($body, true);
-            $message = $error['error']['message'] ?? $e->getMessage();
-            throw new \RuntimeException("Request failed: {$message}");
-        } catch (GuzzleException $e) {
-            throw new \RuntimeException("Network error: {$e->getMessage()}");
+        $url = self::BASE_URL . self::API_VERSION . '/' . ltrim($endpoint, '/');
+        $separator = str_contains($url, '?') ? '&' : '?';
+        $url .= $separator . http_build_query($params);
+
+        $response = wp_remote_request($url, [
+            'method' => $method,
+            'timeout' => 30,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new \RuntimeException("Network error: {$response->get_error_message()}");
         }
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        if (isset($data['error'])) {
+            throw new \RuntimeException("API Error: {$data['error']['message']} (Code: {$data['error']['code']})");
+        }
+
+        return $data;
     }
 }
