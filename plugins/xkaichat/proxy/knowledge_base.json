@@ -1,0 +1,114 @@
+{
+  "faq": [
+    {
+      "triggers": ["contacto", "contato", "telefone", "telemóvel", "celular", "número", "falar com", "ligar", "912423483"],
+      "question": "Como posso contactar a Capuchinho Verde?",
+      "answer": "Pode ligar ou enviar mensagem para 912423483. A pastelaria fica na Praceta Francisco Borges, no Porto, e é 100% vegan e artesanal."
+    },
+    {
+      "triggers": ["onde", "localizada", "morada", "endereço", "fica", "localização", "porto", "praceta"],
+      "question": "Onde fica a Capuchinho Verde?",
+      "answer": "Ficamos na Praceta Francisco Borges, no Porto. Somos uma pastelaria 100% vegan e artesanal."
+    },
+    {
+      "triggers": ["vegan", "vegana", "vegetariano", "produtos veganos", "é tudo vegetal"],
+      "question": "Os produtos são veganos?",
+      "answer": "Sim, a Capuchinho Verde é uma pastelaria 100% vegan — todos os produtos são artesanais e sem ingredientes de origem animal."
+    },
+    {
+      "triggers": ["bolas de berlim", "bola de berlim", "berlim"],
+      "question": "Preço das Bolas de Berlim",
+      "answer": "Bolas de Berlim: 3 unidades por 4€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["pastéis de nata", "pastel de nata", "nata", "natas"],
+      "question": "Preço dos Pastéis de Nata",
+      "answer": "Pastéis de Nata: 6 unidades por 7€ ou 12 unidades por 12€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["bôla", "bola de carnes", "bola mista", "bola enchidos", "bôla"],
+      "question": "Preço da Bôla",
+      "answer": "Bôla (enchidos ou mista): 18€ por 1,6 kg ou 10€ por 0,8 kg (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["quiche"],
+      "question": "Preço da Quiche",
+      "answer": "Quiche: 15€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["cheesecake", "cheesecakes"],
+      "question": "Preços dos Cheesecakes",
+      "answer": "Cheesecake Oreo: 17€. Cheesecake de limão e morangos: 16€. Cheesecake Biscoff: 17€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["banoffee", "snickers", "bounty", "tarte snickers", "tarte bounty"],
+      "question": "Preços de tartes especiais",
+      "answer": "Tarte Banoffee: 16€. Tarte Snickers: 17€. Tarte Bounty: 17€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["tarte de chocolate", "chocolate negro", "tarte chocolate"],
+      "question": "Preço da Tarte de Chocolate Negro",
+      "answer": "Tarte de chocolate negro: 17€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["tarte de nata", "tarte de feijão", "tarte nata"],
+      "question": "Preço das tartes de nata/feijão",
+      "answer": "Tarte de nata ou de feijão: 14€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["bolo rei", "bolo-rei"],
+      "question": "Preço do Bolo Rei",
+      "answer": "Bolo Rei: 18€ por 1,5 kg ou 10€ por 750 g (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["brownie"],
+      "question": "Preço do Brownie",
+      "answer": "Brownie: 12€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["cinnamon roll", "cinnamon rolls", "rolinhos de canela"],
+      "question": "Preço dos Cinnamon Rolls",
+      "answer": "Cinnamon rolls: entre 5€ e 6€, conforme a opção (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["lanches", "lanche", "lanche misto"],
+      "question": "Preço dos lanches mistos",
+      "answer": "Lanches mistos: 6€ (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["salgados", "seitanas", "panados", "pataniscas", "rissóis", "coxinhas"],
+      "question": "Preços de salgados",
+      "answer": "Panados de seitan: 9€. Pataniscas: 8€. Seitana: 15€/1 kg. Rissóis de soja: 8€. Coxinhas: 8€. Empadas: 8€. Folhados de salsicha: 7€. Folhados de pizza: 8€. Pãezinhos de batata: 8€. Massa fina: 16€/1 kg (tabela de preços 2026)."
+    },
+    {
+      "triggers": ["preço", "precos", "preços", "tabela", "quanto custa", "quanto é", "quanto fica"],
+      "question": "Onde posso ver a tabela de preços completa?",
+      "answer": "Pode consultar a tabela de preços completa em https://www.capuchinhoverde.com/tabela-de-precos/ ou pedir-nos por telefone 912423483. Os valores que indico vêm sempre da tabela de preços de 2026."
+    },
+    {
+      "triggers": ["encomenda", "encomendar", "reservar", "encomendas", "antecedência"],
+      "question": "Como faço uma encomenda?",
+      "answer": "Para encomendas, ligue ou escreva para 912423483. Em dias de maior procura recomendamos encomendar com antecedência, mas confirme horários por telefone — os horários podem variar."
+    },
+    {
+      "triggers": ["horário", "horario", "aberto", "abre", "fecha", "fechado", "hora de fecho"],
+      "question": "Qual é o horário?",
+      "answer": "Os horários podem variar ao longo do ano. Por favor confirme por telefone 912423483, ou na página oficial capuchinhoverde.com."
+    },
+    {
+      "triggers": ["entrega", "entregas", "delivery", "envio", "estafeta", "recebo em casa"],
+      "question": "Fazem entregas?",
+      "answer": "Confirme a disponibilidade de entrega no momento por telefone 912423483 — a política de entregas pode variar conforme a época."
+    },
+    {
+      "triggers": ["evento", "eventos", "cão", "cadelas", "raça", "bleu rescue", "cãominhada", "caminhada"],
+      "question": "Eventos da Capuchinho Verde",
+      "answer": "Participamos em eventos como o Porto Vegan Market e a cãominhada de apoio à Bleu Rescue. Consulte a conta oficial para novidades e datas."
+    },
+    {
+      "triggers": ["história", "historia", "livro", "capuchinho", "conto", "crianças"],
+      "question": "De onde vem o nome Capuchinho Verde?",
+      "answer": "O nome vem de um livro infantil com o Capuchinho Verde — as receitas são artesanais e 100% veganas. O livro apoia as filhas da nossa fundadora."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+.xkaichat-admin-wrap .status-pill {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: 999px;
+	font-size: 12px;
+}
+
+.xkaichat-admin-wrap .status-pill.ok {
+	background: #e7f3e4;
+	color: #3f6a33;
+}
+
+.xkaichat-admin-wrap .status-pill.bad {
+	background: #fdeceb;
+	color: #c0392b;
+}
+
+.xkaichat-admin-wrap .actions {
+	margin-top: 16px;
+}
+
+.xkaichat-admin-wrap .actions button {
+	margin-right: 8px;
+}
+
+.xkaichat-admin-wrap .health-box {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	padding: 12px 16px;
+	margin-top: 20px;
+	max-width: 520px;
+}
+
+.xkaichat-admin-wrap .health-box code {
+	white-space: pre-line;
+}
