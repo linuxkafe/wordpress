@@ -54,7 +54,7 @@ if ( ! empty( $logo_url ) ) {
 						<path fill="currentColor" d="M9 3v4H5v2H3V3h6zm6 0h6v6h-2V5h-4V3zM3 13h2v4h4v2H3v-6zm16 0h2v6h-6v-2h4v-4z"/>
 					</svg>
 				</button>
-				<span class="xkaichat-online"><span class="xkaichat-dot"></span> online</span>
+				<span class="xkaichat-online" data-role="online"><span class="xkaichat-dot"></span> online</span>
 			</span>
 		</header>
 
@@ -82,7 +82,7 @@ if ( ! empty( $logo_url ) ) {
 		</section>
 
 		<section class="xkaichat-view xkaichat-view-code" data-role="view-code" hidden>
-			<p class="xkaichat-greeting"><?php echo esc_html__( 'Introduza o código de 6 dígitos enviado para o seu email.', 'xkaichat' ); ?></p>
+			<p class="xkaichat-greeting" data-role="code-greeting"><?php echo esc_html__( 'Introduza o código de 6 dígitos enviado para o seu email.', 'xkaichat' ); ?></p>
 			<form class="xkaichat-form" data-role="code-form">
 				<label>
 					<span class="xkaichat-label"><?php echo esc_html__( 'Código', 'xkaichat' ); ?></span>

@@ -90,6 +90,12 @@ class Xkaichat {
 		);
 		$public->register_hooks();
 
+		// Os emails do plugin saem com o remetente do site (admin_email); o
+		// default do WP (wordpress@dominio) quebra SPF/DKIM e emails de
+		// validação podem nunca chegar.
+		add_filter( 'wp_mail_from', array( $this, 'mail_from' ) );
+		add_filter( 'wp_mail_from_name', array( $this, 'mail_from_name' ) );
+
 		add_action( 'init', array( $this->dependencies['i18n'], 'load_plugin_textdomain' ) );
 
 		// Limpeza agendada de mensagens antigas.
@@ -106,5 +112,27 @@ class Xkaichat {
 	 */
 	public function get_dependencies() {
 		return $this->dependencies;
+	}
+
+	/**
+	 * Remetente dos emails: admin_email do site.
+	 *
+	 * @param string $from Remetente original.
+	 * @return string
+	 */
+	public function mail_from( $from ) {
+		$admin = get_option( 'admin_email' );
+		return is_email( $admin ) ? $admin : $from;
+	}
+
+	/**
+	 * Nome do remetente dos emails: nome do site.
+	 *
+	 * @param string $from_name Nome original.
+	 * @return string
+	 */
+	public function mail_from_name( $from_name ) {
+		$name = get_bloginfo( 'name' );
+		return '' !== (string) $name ? $name : $from_name;
 	}
 }

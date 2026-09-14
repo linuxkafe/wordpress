@@ -93,6 +93,9 @@
 	gap: 8px;
 	z-index: 1;
 }
+.xkaichat-tip[hidden] {
+	display: none !important;
+}
 
 .xkaichat-tip::after {
 	content: "";
@@ -264,6 +267,15 @@
 
 .xkaichat-online .xkaichat-dot {
 	background: #c8e6b2;
+}
+
+.xkaichat-online.xkaichat-offline {
+	color: var(--xkc-border);
+}
+
+.xkaichat-online.xkaichat-offline .xkaichat-dot {
+	background: #d8d8d0;
+	animation: none;
 }
 
 .xkaichat-typing .xkaichat-typing-dot {

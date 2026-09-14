@@ -30,6 +30,7 @@ function reset_state() {
 	$GLOBALS['xkc_http_args']  = array();
 	$GLOBALS['xkc_theme_mods'] = array();
 	$GLOBALS['xkc_attachment_urls'] = array();
+	$GLOBALS['xkc_bloginfo'] = array();
 }
 
 /* ============ Activator / Deactivator ============ */
@@ -46,6 +47,8 @@ function test_activator() {
 	expect( isset( $s['accent_color'] ) && '#5a8a4b' === $s['accent_color'], 'estética verde por omissão' );
 	expect( isset( $s['enable_global_widget'] ) && 0 === (int) $s['enable_global_widget'], 'widget global off por omissão' );
 	expect( isset( $s['widget_auto_open'] ) && 0 === (int) $s['widget_auto_open'], 'auto_open off por omissão' );
+	expect( isset( $s['terms_text'] ) && false !== strpos( $s['terms_text'], 'tratamento automatizado' ), 'termos default: tratamento automatizado' );
+	expect( isset( $s['terms_text'] ) && false !== strpos( $s['terms_text'], 'modelo local' ), 'termos default: modelo local' );
 
 	$wpdb = $GLOBALS['wpdb'];
 	expect( isset( $wpdb->tables['wp_xkaichat_codes'] ), 'tabela xkaichat_codes criada' );
@@ -260,10 +263,11 @@ function test_proxy_client() {
 	$px = new Xkaichat_Proxy( 'xkaichat', '1.0.0' );
 	$GLOBALS['xkc_http']['http://127.0.0.1:5001/api/health'] = array(
 		'code' => 200,
-		'body' => wp_json_encode( array( 'status' => 'ok', 'mode' => 'ollama', 'model' => 'qwen3:8b', 'cache_items' => 0 ) ),
+		'body' => wp_json_encode( array( 'status' => 'ok', 'mode' => 'ollama', 'model' => 'qwen3:8b', 'cache_items' => 0, 'upstream' => 'ok' ) ),
 	);
 	$h = $px->health();
 	expect( is_array( $h ) && 'ok' === $h['status'], 'proxy health' );
+	expect( isset( $h['upstream'] ) && 'ok' === $h['upstream'], 'proxy health expõe upstream' );
 
 	// Chave partilhada no header.
 	reset_state();
@@ -331,6 +335,36 @@ function test_public_logo() {
 	expect( '' === $url, 'logo_url vazio sem fonte' );
 }
 
+/* ============ Remetente dos emails ============ */
+
+function test_mail_sender() {
+	reset_state();
+	$GLOBALS['xkc_options']['admin_email'] = 'admin@capuchinhoverde.com';
+	$GLOBALS['xkc_bloginfo']['name']       = 'Capuchinho Verde';
+
+	$xkc = new Xkaichat();
+	expect( 'admin@capuchinhoverde.com' === $xkc->mail_from( 'wordpress@example.com' ), 'remetente = admin_email do site' );
+	expect( 'Capuchinho Verde' === $xkc->mail_from_name( 'WordPress' ), 'nome do remetente = nome do site' );
+
+	// Sem admin_email configurado → preserva o original (fail-safe).
+	reset_state();
+	$xkc2 = new Xkaichat();
+	expect( 'wordpress@example.com' === $xkc2->mail_from( 'wordpress@example.com' ), 'remetente preserva original sem admin_email' );
+	expect( 'WordPress' === $xkc2->mail_from_name( 'WordPress' ), 'nome preserva original sem nome do site' );
+}
+
+/* ============ Estado online do assistente ============ */
+
+function test_public_health() {
+	reset_state();
+	$pub = new Xkaichat_Public( 'xkaichat', '1.0.0', null, null, null, null );
+
+	expect( true === $pub->is_online( array( 'status' => 'ok', 'upstream' => 'ok' ) ), 'online = proxy ok + LLM ok' );
+	expect( false === $pub->is_online( array( 'status' => 'ok', 'upstream' => 'down' ) ), 'offline quando LLM em baixo' );
+	expect( false === $pub->is_online( new WP_Error( 'xkc_proxy_http', 'down' ) ), 'offline quando proxy falha' );
+	expect( false === $pub->is_online( array( 'status' => 'ok' ) ), 'sem upstream → offline (fail-closed)' );
+}
+
 /* ============ executa ============ */
 
 test_activator();
@@ -341,6 +375,8 @@ test_summary();
 test_proxy_client();
 test_admin_onboarding_fields();
 test_public_logo();
+test_mail_sender();
+test_public_health();
 
 $total = $GLOBALS['xkc_count'];
 $fails = count( $GLOBALS['xkc_failures'] );

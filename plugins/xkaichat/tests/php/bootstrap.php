@@ -438,6 +438,12 @@ function __( $text ) {
 	return (string) $text;
 }
 
+$GLOBALS['xkc_bloginfo'] = array();
+
+function get_bloginfo( $show = 'name', $filter = 'raw' ) {
+	return isset( $GLOBALS['xkc_bloginfo'][ $show ] ) ? $GLOBALS['xkc_bloginfo'][ $show ] : '';
+}
+
 function wp_trim_words( $text, $num_words = 55, $more = null ) {
 	$words = preg_split( '/\s+/', trim( (string) $text ) );
 	if ( count( $words ) <= $num_words ) {
@@ -449,6 +455,9 @@ function wp_trim_words( $text, $num_words = 55, $more = null ) {
 /* ---------- carrega classes do plugin ---------- */
 
 $BASE = XKC_TEST_ROOT;
+define( 'XKAICHAT_VERSION', '1.0.0' );
+define( 'XKAICHAT_PLUGIN_DIR', $BASE );
+require_once $BASE . 'includes/class-xkaichat.php';
 require_once $BASE . 'includes/class-xkaichat-activator.php';
 require_once $BASE . 'includes/class-xkaichat-deactivator.php';
 require_once $BASE . 'includes/class-xkaichat-i18n.php';

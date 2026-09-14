@@ -99,6 +99,8 @@ class Xkaichat_Public {
 		add_action( 'wp_ajax_nopriv_xkaichat_send_message', array( $this, 'ajax_send_message' ) );
 		add_action( 'wp_ajax_xkaichat_end_session', array( $this, 'ajax_end_session' ) );
 		add_action( 'wp_ajax_nopriv_xkaichat_end_session', array( $this, 'ajax_end_session' ) );
+		add_action( 'wp_ajax_xkaichat_health', array( $this, 'ajax_health' ) );
+		add_action( 'wp_ajax_nopriv_xkaichat_health', array( $this, 'ajax_health' ) );
 	}
 
 	/**
@@ -139,7 +141,7 @@ class Xkaichat_Public {
 				'widget_heading'       => 'Olá! Como podemos ajudar?',
 				'widget_greeting'      => 'Bem-vindo à Capuchinho Verde. Faça-nos a sua pergunta sobre produtos, preços e encomendas.',
 				'widget_logo_url'      => '',
-				'terms_text'           => 'Para continuar, aceite o tratamento dos seus dados: o seu email (e, se indicado, o telefone) serão usados apenas para validar esta conversa, responder às suas perguntas e enviar um resumo à equipa. Não partilhamos os seus dados com terceiros.',
+				'terms_text'           => 'Para continuar, aceite o tratamento automatizado dos seus dados: o seu email (e, se indicado, o telefone) serão usados apenas para validar esta conversa, responder às suas perguntas e enviar um resumo à equipa. Este assistente usa um modelo local que pode cometer erros; confirme sempre preços e encomendas por telefone 912423483. Não partilhamos os seus dados com terceiros.',
 				'widget_initial_message' => 'Olá! Já está ligado/a ao Capuchinho Verde. Em que posso ajudar hoje? Pergunte sobre produtos, preços e encomendas.',
 				'widget_auto_open'    => 0,
 				'accent_color'         => '#5a8a4b',
@@ -182,6 +184,10 @@ class Xkaichat_Public {
 					'error_generic'=> __( 'Não foi possível completar o pedido. Tente novamente.', 'xkaichat' ),
 					'unavailable'  => __( 'O assistente está temporariamente indisponível. Contacte-nos por telefone 912423483.', 'xkaichat' ),
 					'expired'      => __( 'A sua sessão expirou. Valide novamente o email.', 'xkaichat' ),
+					'online'       => __( 'online', 'xkaichat' ),
+					'offline'      => __( 'offline', 'xkaichat' ),
+					'code_sent'    => __( 'Enviamos o código para o seu email (verifique também a pasta de spam).', 'xkaichat' ),
+					'mail_failed'  => __( 'Não foi possível enviar o email de validação. Contacte-nos por telefone 912423483.', 'xkaichat' ),
 				),
 			)
 		);
@@ -351,5 +357,58 @@ class Xkaichat_Public {
 			return str_replace( 'src=', 'data-cfasync="false" src=', $tag );
 		}
 		return $tag;
+	}
+
+	/**
+	 * AJAX: estado do assistente (proxy + LLM upstream).
+	 *
+	 * O indicador online do widget não pode depender só do proxy: o proxy pode
+	 * estar de pé com o Ollama em baixo. Devolve online=true apenas quando o
+	 * health do proxy é ok E o upstream LLM responde. Nunca falha: em erro de
+	 * rede → offline (o widget usa o padrão fail-closed).
+	 */
+	public function ajax_health() {
+		check_ajax_referer( 'xkaichat_public', 'nonce' );
+
+		$health = $this->proxy->health();
+		if ( is_wp_error( $health ) ) {
+			nocache_headers();
+			wp_send_json_success(
+				array(
+					'online'   => false,
+					'upstream' => 'down',
+					'mode'     => '',
+					'model'    => '',
+				)
+			);
+		}
+
+		$upstream = isset( $health['upstream'] ) ? $health['upstream'] : 'down';
+		nocache_headers();
+		wp_send_json_success(
+			array(
+				'online'   => $this->is_online( $health ),
+				'upstream' => $upstream,
+				'mode'     => isset( $health['mode'] ) ? $health['mode'] : '',
+				'model'    => isset( $health['model'] ) ? $health['model'] : '',
+			)
+		);
+	}
+
+	/**
+	 * Decide se o assistente está "online" a partir do health do proxy.
+	 *
+	 * Fail-closed: sem upstream de LLM (proxy antigo ou campo em falta) → offline.
+	 *
+	 * @param array|WP_Error $health Health do proxy.
+	 * @return bool
+	 */
+	public function is_online( $health ) {
+		if ( ! is_array( $health ) ) {
+			return false;
+		}
+		$status   = isset( $health['status'] ) ? $health['status'] : '';
+		$upstream = isset( $health['upstream'] ) ? $health['upstream'] : 'down';
+		return 'ok' === $status && 'ok' === $upstream;
 	}
 }

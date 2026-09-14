@@ -79,7 +79,7 @@ class Xkaichat_Activator {
 			'widget_heading'      => 'Olá! Como podemos ajudar?',
 			'widget_greeting'     => 'Bem-vindo à Capuchinho Verde. Faça-nos a sua pergunta sobre produtos, preços e encomendas.',
 			'widget_logo_url'     => '',
-			'terms_text'          => 'Para continuar, aceite o tratamento dos seus dados: o seu email (e, se indicado, o telefone) serão usados apenas para validar esta conversa, responder às suas perguntas e enviar um resumo à equipa. Não partilhamos os seus dados com terceiros.',
+			'terms_text'          => 'Para continuar, aceite o tratamento automatizado dos seus dados: o seu email (e, se indicado, o telefone) serão usados apenas para validar esta conversa, responder às suas perguntas e enviar um resumo à equipa. Este assistente usa um modelo local que pode cometer erros; confirme sempre preços e encomendas por telefone 912423483. Não partilhamos os seus dados com terceiros.',
 			'widget_initial_message' => 'Olá! Já está ligado/a ao Capuchinho Verde. Em que posso ajudar hoje? Pergunte sobre produtos, preços e encomendas.',
 			'widget_auto_open'    => 0,
 			'accent_color'        => '#5a8a4b',

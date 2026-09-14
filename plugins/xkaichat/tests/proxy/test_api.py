@@ -29,6 +29,7 @@ def test_health(client):
     data = r.json()
     assert data["status"] == "ok"
     assert "cache_items" in data
+    assert data["upstream"] in ("ok", "down")
 
 
 def test_chat_sem_chave_partilhada(client):

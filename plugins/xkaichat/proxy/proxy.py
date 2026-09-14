@@ -72,6 +72,25 @@ def _check_proxy_key(x_xkai_proxy_key: str | None) -> None:
         raise HTTPException(status_code=401, detail="proxy_key_invalida")
 
 
+def _upstream_online() -> str:
+    """Probe curto ao LLM (Ollama ou gateway) para o indicador de estado.
+
+    O health do proxy não é suficiente para o widget: o proxy pode estar de pé
+    e o Ollama em baixo. Um GET aos tags do Ollama (timeout curto) resolve.
+    Devolve sempre "ok"/"down" — nunca levanta exceções.
+    """
+    timeout = httpx.Timeout(1.5, connect=1.5)
+    try:
+        with httpx.Client(timeout=timeout) as client:
+            if config.gateway_url:
+                resp = client.get(f"{config.gateway_url}/models")
+            else:
+                resp = client.get(f"{config.ollama_url}/api/tags")
+        return "ok" if resp.status_code < 400 else "down"
+    except httpx.HTTPError:
+        return "down"
+
+
 def _rate_limit(request: Request) -> None:
     ip = request.client.host if request.client else "0.0.0.0"
     now = time.monotonic()
@@ -154,6 +173,7 @@ def health() -> dict:
         "mode": "ollama" if not config.gateway_url else "ollama+gateway",
         "model": config.ollama_model,
         "cache_items": cache.count(),
+        "upstream": _upstream_online(),
     }
 
 

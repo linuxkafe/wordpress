@@ -44,6 +44,8 @@
 	var verifyBtn = root.querySelector('[data-role="verify-btn"]');
 	var resendBtn = root.querySelector('[data-role="resend-btn"]');
 	var endBtn = root.querySelector('[data-role="end-btn"]');
+	var onlineEl = root.querySelector('[data-role="online"]');
+	var codeGreeting = root.querySelector('[data-role="code-greeting"]');
 
 	var sessionToken = null;
 	var lastEmail = '';
@@ -120,6 +122,7 @@
 		dismissTip();
 		panel.hidden = false;
 		root.classList.add('xkaichat-open');
+		refreshHealth();
 	}
 
 	function closePanel() {
@@ -213,6 +216,25 @@
 		div.textContent = text;
 		bodyEl.appendChild(div);
 		bodyEl.scrollTop = bodyEl.scrollHeight;
+	}
+
+	/**
+	 * Atualiza o indicador online consoante o estado real (proxy + LLM).
+	 * Falha fechada: qualquer erro de rede/HTTP marca offline.
+	 */
+	function refreshHealth() {
+		if (!onlineEl) {
+			return;
+		}
+		ajax('xkaichat_health', {}, function (err, data) {
+			if (err || !data || !data.online) {
+				onlineEl.textContent = I.offline || 'offline';
+				onlineEl.classList.add('xkaichat-offline');
+				return;
+			}
+			onlineEl.textContent = I.online || 'online';
+			onlineEl.classList.remove('xkaichat-offline');
+		});
 	}
 
 	function persistTranscript() {
@@ -320,6 +342,9 @@
 				showError(emailError, mapErr(err), true);
 				return;
 			}
+			if (codeGreeting) {
+				codeGreeting.textContent = I.code_sent || 'Enviamos o código para o seu email.';
+			}
 			setView('code');
 		});
 	});
@@ -418,6 +443,8 @@
 			case 'http_502':
 			case 'http_503':
 				return I.unavailable || 'Assistente indisponível.';
+			case 'xkc_mail_failed':
+				return I.mail_failed || 'Não foi possível enviar o email de validação.';
 			case 'xkc_rate_limit':
 			case 'xkc_cooldown':
 				return I.retry || 'Demasiados pedidos. Aguarde um pouco e tente novamente.';
@@ -432,6 +459,7 @@
 
 	// inicia fechado por omissão; auto-abre só se configurado nas opções
 	initTip();
+	refreshHealth();
 	chooseEntryView();
 	if (Number(cfg.auto_open) === 1) {
 		openPanel();

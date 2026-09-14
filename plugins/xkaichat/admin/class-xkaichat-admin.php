@@ -333,7 +333,7 @@ class Xkaichat_Admin {
 	public function field_terms_text() {
 		$v = $this->get( 'terms_text' );
 		if ( '' === $v ) {
-			$v = 'Para continuar, aceite o tratamento dos seus dados: o seu email (e, se indicado, o telefone) serão usados apenas para validar esta conversa, responder às suas perguntas e enviar um resumo à equipa. Não partilhamos os seus dados com terceiros.';
+			$v = 'Para continuar, aceite o tratamento automatizado dos seus dados: o seu email (e, se indicado, o telefone) serão usados apenas para validar esta conversa, responder às suas perguntas e enviar um resumo à equipa. Este assistente usa um modelo local que pode cometer erros; confirme sempre preços e encomendas por telefone 912423483. Não partilhamos os seus dados com terceiros.';
 		}
 		echo '<textarea class="large-text" rows="4" name="xkaichat_settings[terms_text]">' . esc_textarea( $v ) . '</textarea>';
 	}

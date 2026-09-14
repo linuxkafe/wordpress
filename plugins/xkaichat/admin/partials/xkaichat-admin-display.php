@@ -30,9 +30,10 @@ $health_ok = ! is_wp_error( $health );
 			<span class="status-pill ok"><?php echo esc_html__( 'Disponível', 'xkaichat' ); ?></span>
 			<pre><code><?php
 				$summary = array(
-					'status' => isset( $health['status'] ) ? $health['status'] : '',
-					'mode'   => isset( $health['mode'] ) ? $health['mode'] : '',
-					'cache'  => isset( $health['cache_items'] ) ? (int) $health['cache_items'] : 0,
+					'status'   => isset( $health['status'] ) ? $health['status'] : '',
+					'mode'     => isset( $health['mode'] ) ? $health['mode'] : '',
+					'cache'    => isset( $health['cache_items'] ) ? (int) $health['cache_items'] : 0,
+					'upstream' => isset( $health['upstream'] ) ? $health['upstream'] : 'down',
 				);
 				echo esc_html( wp_json_encode( $summary, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT ) );
 			?></code></pre>
@@ -50,5 +51,15 @@ $health_ok = ! is_wp_error( $health );
 
 	<p class="description">
 		<?php echo esc_html__( 'Shortcode do widget: [xkaichat]', 'xkaichat' ); ?>
+	</p>
+
+	<p class="description">
+		<?php
+		printf(
+			/* translators: %s: endereço de email do admin (remetente dos emails do plugin). */
+			esc_html__( 'Os emails de validação e de resumo são enviados com o remetente do site: %s', 'xkaichat' ),
+			'<code>' . esc_html( (string) get_option( 'admin_email' ) ) . '</code>'
+		);
+		?>
 	</p>
 </div>

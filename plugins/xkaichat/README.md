@@ -1,8 +1,8 @@
 # XKaiChat
 
-Assistente IA para o **Capuchinho Verde** — plugin WordPress (PHP) + proxy intermédio (Python/FastAPI) que conversa com o Ollama local usando RAG sobre o menu/FAQ oficial.
+Assistente IA originalmente criado para o **Capuchinho Verde** — plugin WordPress (PHP) + proxy intermédio (Python/FastAPI) que conversa com o Ollama local usando RAG sobre o menu/FAQ oficial.
 
-O visitante valida o email com um código temporário (telefone opcional), conversa com o assistente sobre produtos, preços e encomendas, e no final o resumo da conversa é enviado por email ao `capuchinho@capuchinhoverde.com`.
+O visitante valida o email com um código temporário (telefone opcional), conversa com o assistente sobre produtos, preços e encomendas, e no final o resumo da conversa é enviado por email ao endereço configurado na administração.
 
 ## Arquitetura
 
