@@ -1,0 +1,37 @@
+# Dependencies
+vendor/
+composer.phar
+
+# WordPress
+wp-content/
+wp-config.php
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+debug.log
+
+# Cache
+tmp/
+build/
+dist/
+*.pyc
+__pycache__/
+
+# Keys
+*.key
+*.pem
+
+# Test coverage
+coverage/
+.phpunit.result.cache

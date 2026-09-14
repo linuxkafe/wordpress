@@ -1,0 +1,30 @@
+{
+    "name": "xkinstagram/xkinstagram",
+    "description": "WordPress plugin to import Instagram posts and stories",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=8.0",
+        "guzzlehttp/guzzle": "^7.8"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5",
+        "mockery/mockery": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xkinstagram\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Xkinstagram\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
