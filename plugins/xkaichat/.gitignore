@@ -1,0 +1,26 @@
+# ferramentas
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# WP / build
+wp-content/
+*.zip
+build/
+dist/
+
+# segredos
+.env
+*.key
+*.pem
+
+# cache do proxy
+proxy/cache_store/
+proxy/*.idx
+proxy/*.db
+proxy/cache/
+proxy/index/
+
+# logs
+*.log
