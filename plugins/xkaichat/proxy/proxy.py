@@ -21,19 +21,44 @@ from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from . import normalize
-from .cache import ResponseCache
-from .config import ProxyConfig
-from .rag import Context, RAG
+import normalize
+from cache import ResponseCache
+from config import ProxyConfig
+from rag import Context, RAG
 
 config = ProxyConfig()
-cache = ResponseCache(
-    config.cache_db,
-    ttl=config.cache_ttl,
-    sim_threshold=config.cache_sim_threshold,
-    min_keywords=config.cache_min_keywords,
-)
-rag = RAG(config.knowledge_base, config.index_dir)
+
+# Lazy initialization for cache and RAG to allow test overrides
+_cache = None
+_rag = None
+
+
+def get_cache() -> ResponseCache:
+    global _cache
+    if _cache is None:
+        _cache = ResponseCache(
+            config.cache_db,
+            ttl=config.cache_ttl,
+            sim_threshold=config.cache_sim_threshold,
+            min_keywords=config.cache_min_keywords,
+        )
+    return _cache
+
+
+def get_rag() -> RAG:
+    global _rag
+    if _rag is None:
+        _rag = RAG(config.knowledge_base, config.index_dir)
+    return _rag
+
+
+# Lazy getters for backward compatibility (tests can override via monkeypatch)
+def _get_cache() -> ResponseCache:
+    return get_cache()
+
+
+def _get_rag() -> RAG:
+    return get_rag()
 
 # Limites simples por IP (em memória).
 _rate: dict[str, list[float]] = {}
@@ -161,7 +186,7 @@ def _llm_gateway(messages: list[dict[str, str]]) -> str:
 
 
 def _generate(message: str) -> tuple[Context, str]:
-    ctx = rag.context_for(message)
+    ctx = _get_rag().context_for(message)
     system = _system_prompt(ctx)
     messages = [{"role": "system", "content": system}, {"role": "user", "content": message}]
     try:
@@ -186,7 +211,7 @@ def health() -> dict:
         "status": "ok",
         "mode": mode,
         "model": config.ollama_model,
-        "cache_items": cache.count(),
+        "cache_items": _get_cache().count(),
         "upstream": _upstream_online(),
     }
 
@@ -204,7 +229,7 @@ def chat(
     if not message:
         raise HTTPException(status_code=400, detail="mensagem_vazia")
 
-    cached = cache.get(message)
+    cached = _get_cache().get(message)
     if cached:
         return cached
 
@@ -213,13 +238,13 @@ def chat(
 
     payload = {"answer": answer, "cache_hit": False, "source": ctx.source}
     if ctx.source != "none" and not normalize.has_no_cache_terms(message):
-        cache.set(message, answer, ctx.source)
+        _get_cache().set(message, answer, ctx.source)
     return payload
 
 
 @app.post("/api/cache/clear", status_code=200)
 def cache_clear() -> dict:
-    cleared = cache.clear()
+    cleared = _get_cache().clear()
     return {"cleared": cleared}
 
 
@@ -233,7 +258,7 @@ def rag_reindex() -> dict:
     texts = extract_pdfs(config.pdfs_dir)
     if not texts:
         raise HTTPException(status_code=400, detail="sem_texto_pdf")
-    chunks = rag.reindex(texts)
+    chunks = _get_rag().reindex(texts)
     return {"chunks": chunks}
 
 

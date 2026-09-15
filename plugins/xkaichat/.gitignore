@@ -4,6 +4,10 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
+# AES
+.aes/
+aes/
+
 # WP / build
 wp-content/
 *.zip

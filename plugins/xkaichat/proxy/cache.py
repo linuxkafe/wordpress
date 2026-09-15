@@ -8,7 +8,7 @@ import threading
 import time
 from pathlib import Path
 
-from . import normalize
+import normalize
 
 _SCHEMA = """
 CREATE TABLE IF NOT EXISTS cache_entries (

@@ -8,7 +8,7 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import normalize
+import normalize
 
 # Prioridade: nunca inventar preços — só usar texto oriundo do PDF de preços/FAQ.
 _DATACLASS_SRC = ("preço", "preco", "preços", "precos", "custo", "custos", "€", "euro", "euros")

@@ -1,0 +1,49 @@
+services:
+  # Proxy - recebe pedidos do WordPress, faz RAG/cache, encaminha para Broker
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile
+    container_name: xkaichat-proxy
+    ports:
+      - "5001:5001"
+    env_file:
+      - ./proxy/.env
+    environment:
+      - BROKER_URL=http://broker:5002
+      - OLLAMA_URL=${OLLAMA_URL:-http://host.docker.internal:11434}
+    volumes:
+      - proxy_cache:/app/cache
+      - proxy_index:/app/index
+      - ./proxy/pdfs:/app/pdfs:ro
+      - ./proxy/knowledge_base.json:/app/knowledge_base.json:ro
+    depends_on:
+      broker:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - xkaichat-net
+
+  # Broker - valida HMAC, rate limit, encaminha para Ollama
+  broker:
+    build:
+      context: ./broker
+      dockerfile: Dockerfile
+    container_name: xkaichat-broker
+    ports:
+      - "5002:5002"
+    env_file:
+      - ./broker/.env
+    environment:
+      - OLLAMA_URL=${OLLAMA_URL:-http://host.docker.internal:11434}
+    restart: unless-stopped
+    networks:
+      - xkaichat-net
+
+volumes:
+  proxy_cache:
+  proxy_index:
+
+networks:
+  xkaichat-net:
+    driver: bridge

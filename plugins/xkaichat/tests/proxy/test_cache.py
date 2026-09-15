@@ -1,7 +1,7 @@
 """Testes da cache por palavras-chave."""
 
-from pathlib import Path
 import time
+from pathlib import Path
 
 from proxy.cache import ResponseCache
 
@@ -43,10 +43,10 @@ def test_termos_no_cache_impedem_gravacao(tmp_path):
 
 
 def test_ttl_expira(tmp_path):
-    c = _cache(tmp_path, ttl=1)
+    c = _cache(tmp_path, ttl=2)
     c.set("ola", "oi", "faq")
     assert c.count() == 1
-    time.sleep(1.2)
+    time.sleep(2.2)
     assert c.get("ola") is None
     assert c.count() == 0
 

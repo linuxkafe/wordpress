@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+.tox/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing
+tests/
+*.cover
+
+# Config
+.env
+.env.*
+
+# Git
+.git/
+.gitignore
+
+# Docs
+docs/
+*.md
+
+# AES
+aes/
+.aes/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml

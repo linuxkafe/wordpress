@@ -7,7 +7,7 @@ PIP := .venv/bin/pip
 PHP_FILES := $(shell find . -type f -name '*.php' -not -path './.venv/*' -not -path './vendor/*')
 REFERENCE_IGNORE := .venv vendor node_modules
 
-.PHONY: setup run-proxy run-broker test test-php test-proxy test-broker test-aes lint format check docs-check qa doctor clean
+.PHONY: setup run-proxy run-broker test test-php test-proxy test-broker test-aes lint format check docs-check qa doctor clean docker-build docker-run docker-stop docker-logs docker-clean
 
 ## Configuração
 setup: ## Prepara ambiente (venv + deps proxy + broker)
@@ -74,6 +74,24 @@ doctor: ## Verifica ambiente
 	@php -v | head -1
 	@python3 --version
 	@curl -s --max-time 3 http://127.0.0.1:11434/api/tags >/dev/null && echo "✅ ollama running" || echo "⚠️  ollama offline (E2E indisponível)"
+
+## Docker
+docker-build: ## Build das imagens Docker (proxy + broker)
+	docker build -t xkaichat-proxy ./proxy
+	docker build -t xkaichat-broker ./broker
+
+docker-run: ## Arranca stack completo com docker-compose (dev local)
+	docker-compose up -d
+
+docker-stop: ## Para stack docker-compose
+	docker-compose down
+
+docker-logs: ## Logs do stack docker-compose
+	docker-compose logs -f
+
+docker-clean: ## Remove imagens e volumes Docker do projeto
+	docker-compose down -v --rmi all 2>/dev/null || true
+	docker rmi xkaichat-proxy xkaichat-broker 2>/dev/null || true
 
 ## Limpeza
 clean: ## Remove artefactos

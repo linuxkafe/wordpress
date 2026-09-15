@@ -2,6 +2,8 @@
 
 import pytest
 from fastapi.testclient import TestClient
+import tempfile
+import os
 
 from proxy import proxy as appmod
 from proxy.rag import Context
@@ -11,15 +13,37 @@ HEADERS = {"X-Xkai-Proxy-Key": SHARED_KEY}
 
 
 @pytest.fixture()
-def client():
+def temp_cache_dir():
+    """Create a temporary directory for cache during tests."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        yield tmpdir
+
+
+@pytest.fixture()
+def client(temp_cache_dir):
+    # Override cache path for tests
+    original_cache_db = appmod.config.cache_db
+    original_proxy_key = appmod.config.proxy_key
+    appmod.config.cache_db = os.path.join(temp_cache_dir, "cache.db")
+    appmod.config.proxy_key = SHARED_KEY
+    # Reset lazy cache
+    appmod._cache = None
+    
     with TestClient(appmod.app) as c:
         yield c
+    
+    # Restore
+    appmod.config.cache_db = original_cache_db
+    appmod.config.proxy_key = original_proxy_key
+    appmod._cache = None
 
 
 @pytest.fixture(autouse=True)
 def _limpa_estado():
     yield
-    appmod.cache.clear()
+    # Clear lazy cache and rate limit
+    if appmod._cache is not None:
+        appmod._cache.clear()
     appmod._rate.clear()
 
 
@@ -95,7 +119,7 @@ def test_rate_limit(monkeypatch, client):
 
 
 def test_cache_clear(client):
-    appmod.cache.set("quanto custa a quiche?", "15€", "faq")
+    appmod._get_cache().set("quanto custa a quiche?", "15€", "faq")
     r = client.post("/api/cache/clear", headers=HEADERS)
     assert r.status_code == 200
     assert r.json()["cleared"] == 1
